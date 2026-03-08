@@ -38,7 +38,7 @@ flowchart LR
         D --> E[Attest Worker]
     end
 
-    H -- RouteDecision\nevidence receipt --> A
+    H -- RouteDecision --> A
     H -- dispatch --> W([Worker])
 
     style H fill:#0f172a,stroke:#0050D4,color:#fff
