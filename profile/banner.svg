@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 160" fill="none">
+  <rect width="960" height="160" fill="#0f172a"/>
+  <rect x="0" y="0" width="4" height="160" fill="#0050D4"/>
+
+  <!-- wordmark -->
+  <text x="48" y="88" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="52" fill="#ffffff" letter-spacing="-2">pyhall</text>
+
+  <!-- tagline -->
+  <text x="48" y="120" font-family="Inter,system-ui,sans-serif" font-weight="400" font-size="18" fill="#94a3b8" letter-spacing="0.5">Worker Class Protocol  ·  AI worker governance</text>
+
+  <!-- right side — pillars -->
+  <text x="680" y="68" font-family="Inter,system-ui,sans-serif" font-weight="600" font-size="13" fill="#0050D4" letter-spacing="1.5">GOVERN  ·  ATTEST  ·  ROUTE  ·  OBSERVE</text>
+  <text x="680" y="92" font-family="Inter,system-ui,sans-serif" font-weight="400" font-size="13" fill="#475569">Python  ·  TypeScript  ·  Go  ·  Apache 2.0</text>
+  <text x="680" y="116" font-family="Inter,system-ui,sans-serif" font-weight="400" font-size="13" fill="#475569">v0.3.0  ·  245 taxonomy entities</text>
+</svg>

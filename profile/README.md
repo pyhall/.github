@@ -1,27 +1,65 @@
-# PyHall — The Trust Signal for AI Worker Governance
+<div align="center">
+  <img src="https://raw.githubusercontent.com/pyhall/.github/main/profile/banner.svg" alt="pyhall — Worker Class Protocol" width="100%"/>
+</div>
+
+<br/>
+
+<div align="center">
 
 > Stripe is the trust signal for payments. AWS is the trust signal for infrastructure.
-> **PyHall is the trust signal for AI worker governance.**
+> **pyhall is the trust signal for AI worker governance.**
+
+[![WCP Spec](https://img.shields.io/badge/WCP-v0.1-0050D4?style=flat-square)](https://workerclassprotocol.dev)
+[![PyPI](https://img.shields.io/pypi/v/pyhall-wcp?style=flat-square&label=PyPI&color=0050D4)](https://pypi.org/project/pyhall-wcp/)
+[![npm](https://img.shields.io/npm/v/@pyhall/core?style=flat-square&label=npm&color=0050D4)](https://www.npmjs.com/package/@pyhall/core)
+[![License](https://img.shields.io/badge/license-Apache%202.0-0050D4?style=flat-square)](https://github.com/pyhall/pyhall-python/blob/main/LICENSE)
+[![pyhall.dev](https://img.shields.io/badge/pyhall.dev-docs-0050D4?style=flat-square)](https://pyhall.dev)
+
+</div>
+
+---
 
 Every agentic system dispatches workers. Almost none of them ask: *should this worker be trusted with this job, under these conditions, with this data?*
 
-PyHall answers that question — with a cryptographic evidence receipt for every decision.
+pyhall answers that question — with a cryptographic evidence receipt for every routing decision.
 
 ---
 
-## What It Does
+## How it works
 
-When an agent needs a capability, it contacts the Hall. The Hall routes the request to the right worker — after verifying controls, computing blast radius, and enforcing governance policy. Every routing decision produces a **RouteDecision**: an immutable evidence receipt your security team can actually read.
+```mermaid
+flowchart LR
+    A([Agent]) -- capability request --> H
 
-- **Capability routing** — agents request what they need (`cap.doc.summarize`), not which tool to call
-- **Blast radius scoring** — computed before anything executes
-- **Worker attestation** — SHA-256 artifact hashes verify workers haven't been tampered with
-- **Ban propagation** — compromised workers blocked across the network instantly
-- **Policy gates** — MSAVX step-up, human-in-the-loop, data label enforcement, all built in
+    subgraph H ["  Hall  "]
+        direction TB
+        B[Match Rule] --> C[Blast Radius]
+        C --> D[Policy Gate]
+        D --> E[Attest Worker]
+    end
+
+    H -- RouteDecision\nevidence receipt --> A
+    H -- dispatch --> W([Worker])
+
+    style H fill:#0f172a,stroke:#0050D4,color:#fff
+    style A fill:#1e293b,stroke:#334155,color:#94a3b8
+    style W fill:#1e293b,stroke:#334155,color:#94a3b8
+```
 
 ---
 
-## The Stack
+## Four pillars
+
+| | |
+|---|---|
+| **Govern** | Define who can run what worker, at what capability level, under which policy. Workers operate inside declared boundaries — or not at all. |
+| **Attest** | Every worker carries a capability card. Every decision produces a verifiable proof — artifact hash, timestamp, correlation ID. |
+| **Route** | Match work to workers by capability, policy tier, and QoS. Mismatches are rejected at the gate, not silently degraded at runtime. |
+| **Observe** | Every routing decision is logged with proof. Query history, audit decisions, trace incidents. Live worker health in one monitor view. |
+
+---
+
+## The stack
 
 | Component | Repo | Install |
 |-----------|------|---------|
@@ -35,7 +73,7 @@ When an agent needs a capability, it contacts the Hall. The Hall routes the requ
 
 ---
 
-## Quick Start
+## Quick start
 
 ```bash
 pip install pyhall-wcp
@@ -58,21 +96,24 @@ decision = hall.route({
 if not decision.denied:
     print(f"Dispatch: {decision.selected_worker_species_id}")
     print(f"Evidence: {decision.decision_id}")
+    print(f"Hash:     {decision.artifact_hash}")
 ```
 
 ---
 
-## The Protocol
+## Four steps to governed workers
 
-PyHall implements **WCP — Worker Class Protocol** — the open standard for AI worker governance.
-
-WCP is language-agnostic. The Python, TypeScript, and Go SDKs are all conformant reference implementations. Build on any of them; the RouteDecision evidence receipts are identical.
-
-[![WCP Spec](https://img.shields.io/badge/WCP-v0.1-0050D4?style=flat-square)](https://workerclassprotocol.dev)
-[![PyPI](https://img.shields.io/pypi/v/pyhall-wcp?style=flat-square&label=PyPI)](https://pypi.org/project/pyhall-wcp/)
-[![npm](https://img.shields.io/npm/v/@pyhall/core?style=flat-square&label=npm)](https://www.npmjs.com/package/@pyhall/core)
-[![License](https://img.shields.io/badge/license-Apache%202.0-green?style=flat-square)](https://github.com/pyhall/pyhall-python/blob/main/LICENSE)
+```
+01 PUBLISH    hall publish worker.wcp.yaml       Define a worker capability card
+02 ENROLL     hall enroll --namespace x.you      Register with the pyhall registry
+03 ROUTE      hall route --cap cap.doc.summarize Match request to the right worker
+04 OBSERVE    hall decisions list                Audit every decision ever made
+```
 
 ---
 
-**[pyhall.dev](https://pyhall.dev)** · **[WCP Spec](https://workerclassprotocol.dev)** · **[Registry](https://api.pyhall.dev)**
+<div align="center">
+
+**[pyhall.dev](https://pyhall.dev)** &nbsp;·&nbsp; **[WCP Spec](https://workerclassprotocol.dev)** &nbsp;·&nbsp; **[Registry](https://api.pyhall.dev)** &nbsp;·&nbsp; **[Docs](https://pyhall.dev/introduction/)**
+
+</div>
