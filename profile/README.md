@@ -27,23 +27,35 @@ pyhall answers that question — with a cryptographic evidence receipt for every
 
 ## How it works
 
+Write worker.py once. Attest the full package. Verify on every run.
+
 ```mermaid
 flowchart LR
-    A([Agent]) -- capability request --> H
-
-    subgraph H ["  Hall  "]
+    subgraph BUILD ["  BUILD ONCE  "]
         direction TB
-        B[Match Rule] --> C[Blast Radius]
-        C --> D[Policy Gate]
-        D --> E[Attest Worker]
+        B1["worker.py"] --> B2["Package"]
+        B2 --> B3["Hash SHA-256\n+ sign namespace key"]
+        B3 --> B4["attestation_receipt.json"]
+        B4 --> B5["Register"]
     end
 
-    H -- RouteDecision --> A
-    H -- dispatch --> W([Worker])
+    subgraph RUN ["  EVERY REQUEST  "]
+        direction TB
+        AG(["Agent"]) -->|"capability request"| PG["Policy Gate"]
+        PG --> BR["Blast Radius"]
+        BR --> VER["Verify Attestation\nload receipt · recompute hash\nverify sig + signer"]
+        VER -->|"ALLOW"| RD["RouteDecision\nevidence receipt"]
+        VER -->|"DENY"| REJ(["Rejected"])
+        RD -->|"dispatch"| WK(["Worker"])
+        WK -->|"result"| AG
+    end
 
-    style H fill:#0f172a,stroke:#0050D4,color:#fff
-    style A fill:#1e293b,stroke:#334155,color:#94a3b8
-    style W fill:#1e293b,stroke:#334155,color:#94a3b8
+    B4 -.->|"artifact hash"| VER
+
+    style BUILD fill:#f8faff,stroke:#0050D4,color:#0f172a
+    style RUN fill:#f8faff,stroke:#0050D4,color:#0f172a
+    style VER fill:#dbe8ff,stroke:#0050D4,color:#0f172a
+    style RD fill:#dbe8ff,stroke:#0050D4,color:#0f172a
 ```
 
 ---
