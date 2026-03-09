@@ -27,35 +27,36 @@ pyhall answers that question — with a cryptographic evidence receipt for every
 
 ## How it works
 
-Write worker.py once. Attest the full package. Verify on every run.
+Trust is bound to the **full worker package**. Every execution re-verifies. Fail-closed on any mismatch.
 
 ```mermaid
 flowchart LR
     subgraph BUILD ["  BUILD ONCE  "]
         direction TB
-        B1["worker.py"] --> B2["Package"]
-        B2 --> B3["Hash SHA-256\n+ sign namespace key"]
-        B3 --> B4["attestation_receipt.json"]
-        B4 --> B5["Register"]
+        B1["worker.py\n+ support files"] --> B2["Canonicalize\npackage"]
+        B2 --> B3["SHA-256\npackage hash"]
+        B3 --> B4["Sign with\nnamespace key\norg.* · x.*"]
+        B4 --> B5["Attestation\ncredential (JSON)"]
+        B5 --> REG[("Registry")]
     end
 
-    subgraph RUN ["  EVERY REQUEST  "]
+    subgraph RUN ["  EVERY EXECUTION  "]
         direction TB
-        AG(["Agent"]) -->|"capability request"| PG["Policy Gate"]
-        PG --> BR["Blast Radius"]
-        BR --> VER["Verify Attestation\nload receipt · recompute hash\nverify sig + signer"]
-        VER -->|"ALLOW"| RD["RouteDecision\nevidence receipt"]
-        VER -->|"DENY"| REJ(["Rejected"])
-        RD -->|"dispatch"| WK(["Worker"])
+        AG(["Agent"]) -->|"capability request"| PG["Policy Gate\n+ Blast Radius"]
+        PG --> VER["Verify via Registry\nhash match · sig valid\nnamespace authorized"]
+        VER -->|"ALLOW"| RD["Dispatch worker\n+ evidence receipt\ndecision_id · artifact_hash"]
+        VER -->|"DENY"| REJ(["Rejected\nfail-closed"])
+        RD --> WK(["Worker executes"])
         WK -->|"result"| AG
     end
 
-    B4 -.->|"artifact hash"| VER
+    REG -.->|"attested hash\n+ signer state"| VER
 
     style BUILD fill:#f8faff,stroke:#0050D4,color:#0f172a
     style RUN fill:#f8faff,stroke:#0050D4,color:#0f172a
     style VER fill:#dbe8ff,stroke:#0050D4,color:#0f172a
     style RD fill:#dbe8ff,stroke:#0050D4,color:#0f172a
+    style REG fill:#0050D4,stroke:#003a9b,color:#ffffff
 ```
 
 ---
